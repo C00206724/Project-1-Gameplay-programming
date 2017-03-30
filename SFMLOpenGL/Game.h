@@ -37,6 +37,11 @@ private:
 	void renderEnemy(mat4 &refModel);
 	void render();
 	void unload();
+	
+	double x; double x4;
+	double x1; double x5;
+	double x2; double x6;
+	double x3;
 };
 
 #endif

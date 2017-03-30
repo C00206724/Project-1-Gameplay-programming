@@ -29,13 +29,9 @@ const string filename = "uvtemplate.tga";
 int width;			// Width of texture
 int height;			// Height of texture
 int comp_count;		// Component of texture
-const int arraymax = 10; //Array Controller
-double x; double x4;
-double x1; double x5;
-double x2; double x6;
-double x3;
 
-int modelXPos[arraymax]; //setting positions to start
+const int arraymax = 10; //Array Controller
+int modelZPos[arraymax]; //setting positions to start
 
 
 
@@ -312,26 +308,26 @@ void Game::initialize()
 		);
 	}
 
-	modelXPos[0] = -35;
-	modelXPos[1] = -60;
-	modelXPos[2] = -200;
-	modelXPos[3] = -150;
-	modelXPos[4] = -40;
-	modelXPos[5] = -25;
-	modelXPos[6] = -175;
-	modelXPos[7] = -125;
-	modelXPos[8] = -120;
-	modelXPos[9] = -225;
+	modelZPos[0] = -35;
+	modelZPos[1] = -60;
+	modelZPos[2] = -200;
+	modelZPos[3] = -150;
+	modelZPos[4] = -40;
+	modelZPos[5] = -25;
+	modelZPos[6] = -175;
+	modelZPos[7] = -125;
+	modelZPos[8] = -120;
+	modelZPos[9] = -225;
 
-	modelX[0] = translate(modelX[0], vec3(-10, 0, modelXPos[0]));
-	modelX[1] = translate(modelX[1], vec3(0, 0, modelXPos[1]));
-	modelX[2] = translate(modelX[2], vec3(2, 0, modelXPos[2]));
-	modelX[3] = translate(modelX[3], vec3(-3, 0, modelXPos[3]));
-	modelX[4] = translate(modelX[4], vec3(-6, 0, modelXPos[4]));
-	modelX[5] = translate(modelX[5], vec3(1, 0, modelXPos[5]));
-	modelX[6] = translate(modelX[6], vec3(10, 0, modelXPos[6]));
-	modelX[7] = translate(modelX[7], vec3(5, 0, modelXPos[7]));
-	modelX[8] = translate(modelX[8], vec3(3, 0, modelXPos[8]));
+	modelX[0] = translate(modelX[0], vec3(-10, 0, modelZPos[0]));
+	modelX[1] = translate(modelX[1], vec3(0, 0, modelZPos[1]));
+	modelX[2] = translate(modelX[2], vec3(2, 0, modelZPos[2]));
+	modelX[3] = translate(modelX[3], vec3(-3, 0, modelZPos[3]));
+	modelX[4] = translate(modelX[4], vec3(-6, 0, modelZPos[4]));
+	modelX[5] = translate(modelX[5], vec3(1, 0, modelZPos[5]));
+	modelX[6] = translate(modelX[6], vec3(10, 0, modelZPos[6]));
+	modelX[7] = translate(modelX[7], vec3(5, 0, modelZPos[7]));
+	modelX[8] = translate(modelX[8], vec3(3, 0, modelZPos[8]));
 
 
 	// Palyer Model matrix
@@ -352,6 +348,20 @@ void Game::update()
 #if (DEBUG >= 2)
 	DEBUG_MSG("Updating...");
 #endif
+
+	for (int i = 0; i < arraymax; i++)
+	{
+		if (modelZPos[i] < 0)
+		{
+			modelX[i] = translate(modelX[i], glm::vec3(0, 0, 0.02));
+		}
+		else
+		{
+			modelZPos[i] = -100;
+		}
+	}
+
+
 	// Update Model View Projection
 	//mvp = projection * view * model;
 }
