@@ -33,6 +33,8 @@ private:
 	bool isRunning = false;
 	void initialize();
 	void update();
+	void renderPlayer(mat4 &refModel);
+	void renderEnemy(mat4 &refModel);
 	void render();
 	void unload();
 };

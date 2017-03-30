@@ -312,24 +312,25 @@ void Game::initialize()
 		);
 	}
 
-	modelXPos[0] = 0;
-	modelXPos[1] = -100;
+	modelXPos[0] = -35;
+	modelXPos[1] = -60;
 	modelXPos[2] = -200;
 	modelXPos[3] = -150;
-	modelXPos[4] = -50;
+	modelXPos[4] = -40;
 	modelXPos[5] = -25;
 	modelXPos[6] = -175;
 	modelXPos[7] = -125;
-	modelXPos[7] = -125;
+	modelXPos[8] = -120;
+	modelXPos[9] = -225;
 
-	modelX[0] = translate(modelX[0], vec3(3, 0, modelXPos[0]));
-	modelX[1] = translate(modelX[1], vec3(3, 0, modelXPos[1]));
-	modelX[2] = translate(modelX[2], vec3(3, 0, modelXPos[2]));
-	modelX[3] = translate(modelX[3], vec3(3, 0, modelXPos[3]));
-	modelX[4] = translate(modelX[4], vec3(3, 0, modelXPos[4]));
-	modelX[5] = translate(modelX[5], vec3(3, 0, modelXPos[5]));
-	modelX[6] = translate(modelX[6], vec3(3, 0, modelXPos[6]));
-	modelX[7] = translate(modelX[7], vec3(3, 0, modelXPos[7]));
+	modelX[0] = translate(modelX[0], vec3(-10, 0, modelXPos[0]));
+	modelX[1] = translate(modelX[1], vec3(0, 0, modelXPos[1]));
+	modelX[2] = translate(modelX[2], vec3(2, 0, modelXPos[2]));
+	modelX[3] = translate(modelX[3], vec3(-3, 0, modelXPos[3]));
+	modelX[4] = translate(modelX[4], vec3(-6, 0, modelXPos[4]));
+	modelX[5] = translate(modelX[5], vec3(1, 0, modelXPos[5]));
+	modelX[6] = translate(modelX[6], vec3(10, 0, modelXPos[6]));
+	modelX[7] = translate(modelX[7], vec3(5, 0, modelXPos[7]));
 	modelX[8] = translate(modelX[8], vec3(3, 0, modelXPos[8]));
 
 
@@ -352,18 +353,12 @@ void Game::update()
 	DEBUG_MSG("Updating...");
 #endif
 	// Update Model View Projection
-	mvp = projection * view * model;
+	//mvp = projection * view * model;
 }
 
-void Game::render()
+void Game::renderPlayer(mat4 &refModel)
 {
-	mvp = projection * view * model;
-
-#if (DEBUG >= 2)
-	DEBUG_MSG("Render Loop...");
-#endif
-
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	mvp = projection * view * refModel;
 
 	//VBO Data....vertices, colors and UV's appended
 	glBufferSubData(GL_ARRAY_BUFFER, 0 * VERTICES * sizeof(GLfloat), 3 * VERTICES * sizeof(GLfloat), vertices);
@@ -382,7 +377,7 @@ void Game::render()
 	glVertexAttribPointer(positionID, 3, GL_FLOAT, GL_FALSE, 0, 0);
 	glVertexAttribPointer(colorID, 4, GL_FLOAT, GL_FALSE, 0, (VOID*)(3 * VERTICES * sizeof(GLfloat)));
 	glVertexAttribPointer(uvID, 2, GL_FLOAT, GL_FALSE, 0, (VOID*)(((3 * VERTICES) + (4 * COLORS)) * sizeof(GLfloat)));
-	
+
 	//Enable Arrays
 	glEnableVertexAttribArray(positionID);
 	glEnableVertexAttribArray(colorID);
@@ -390,6 +385,57 @@ void Game::render()
 
 	//Draw Element Arrays
 	glDrawElements(GL_TRIANGLES, 3 * INDICES, GL_UNSIGNED_INT, NULL);
+}
+
+void Game::renderEnemy(mat4 &refModel)
+{
+	mvp = projection * view * refModel;
+
+	//VBO Data....vertices, colors and UV's appended
+	glBufferSubData(GL_ARRAY_BUFFER, 0 * VERTICES * sizeof(GLfloat), 3 * VERTICES * sizeof(GLfloat), vertices);
+	glBufferSubData(GL_ARRAY_BUFFER, 3 * VERTICES * sizeof(GLfloat), 4 * COLORS * sizeof(GLfloat), colors);
+	glBufferSubData(GL_ARRAY_BUFFER, ((3 * VERTICES) + (4 * COLORS)) * sizeof(GLfloat), 2 * UVS * sizeof(GLfloat), uvs);
+
+	// Send transformation to shader mvp uniform
+	glUniformMatrix4fv(mvpID, 1, GL_FALSE, &mvp[0][0]);
+
+	//Set Active Texture .... 32
+	glActiveTexture(GL_TEXTURE0);
+	glUniform1i(textureID, 0);
+
+	//Set pointers for each parameter (with appropriate starting positions)
+	//https://www.khronos.org/opengles/sdk/docs/man/xhtml/glVertexAttribPointer.xml
+	glVertexAttribPointer(positionID, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	glVertexAttribPointer(colorID, 4, GL_FLOAT, GL_FALSE, 0, (VOID*)(3 * VERTICES * sizeof(GLfloat)));
+	glVertexAttribPointer(uvID, 2, GL_FLOAT, GL_FALSE, 0, (VOID*)(((3 * VERTICES) + (4 * COLORS)) * sizeof(GLfloat)));
+
+	//Enable Arrays
+	glEnableVertexAttribArray(positionID);
+	glEnableVertexAttribArray(colorID);
+	glEnableVertexAttribArray(uvID);
+
+	//Draw Element Arrays
+	glDrawElements(GL_TRIANGLES, 3 * INDICES, GL_UNSIGNED_INT, NULL);
+}
+
+void Game::render()
+{
+	//mvp = projection * view * refModel;
+
+#if (DEBUG >= 2)
+	DEBUG_MSG("Render Loop...");
+#endif
+
+
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	renderPlayer(model); //draws player cube
+	
+	for (int i = 0; i < 10; i++) // draws enemy cubes(obstacles)
+	{
+		renderEnemy(modelX[i]);
+	}
+	
 	window.display();
 
 	//Disable Arrays
