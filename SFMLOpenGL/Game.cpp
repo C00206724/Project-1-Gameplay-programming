@@ -1,5 +1,7 @@
 #include <Game.h>
 #include <Cube.h>
+#include <vector>
+using std::vector;
 
 GLuint	vsid,		// Vertex Shader ID
 		fsid,		// Fragment Shader ID
@@ -17,20 +19,29 @@ GLuint	vsid,		// Vertex Shader ID
 //const string filename = "coordinates.tga";
 //const string filename = "cube.tga";
 //const string filename = "grid.tga";
-const string filename = "grid_wip.tga";
+//const string filename = "grid_wip.tga";
 //const string filename = "minecraft.tga";
 //const string filename = "texture.tga";
 //const string filename = "texture_2.tga";
-//const string filename = "uvtemplate.tga";
+const string filename = "uvtemplate.tga";
 
 
 int width;			// Width of texture
 int height;			// Height of texture
 int comp_count;		// Component of texture
+const int arraymax = 10; //Array Controller
+double x; double x4;
+double x1; double x5;
+double x2; double x6;
+double x3;
+
+int modelXPos[arraymax]; //setting positions to start
+
+
 
 unsigned char* img_data;		// image data
 
-mat4 mvp, projection, view, model;			// Model View Projection
+mat4 mvp, projection, view, model, modelX[arraymax];			// Model View Projection
 
 Game::Game() : 
 	window(VideoMode(800, 600), 
@@ -138,9 +149,9 @@ void Game::initialize()
 	const char* vs_src = 
 		"#version 400\n\r"
 		""
-		//"layout(location = 0) in vec3 sv_position; //Use for individual Buffers"
-		//"layout(location = 1) in vec4 sv_color; //Use for individual Buffers"
-		//"layout(location = 2) in vec2 sv_texel; //Use for individual Buffers"
+		/*"layout(location = 0) in vec3 sv_position; //Use for individual Buffers"
+		"layout(location = 1) in vec4 sv_color; //Use for individual Buffers"
+		"layout(location = 2) in vec2 sv_texel; //Use for individual Buffers"*/
 		""
 		"in vec3 sv_position;"
 		"in vec4 sv_color;"
@@ -187,13 +198,13 @@ void Game::initialize()
 		"out vec4 fColor;"
 		""
 		"void main() {"
-		//"	vec4 lightColor = vec4(1.0f, 0.0f, 0.0f, 1.0f); "
-		//"	fColor = vec4(0.50f, 0.50f, 0.50f, 1.0f);"
-		//"	fColor = texture2D(f_texture, uv);"
-		//"	fColor = color * texture2D(f_texture, uv);"
-		//"	fColor = lightColor * texture2D(f_texture, uv);"
-		//"	fColor = color + texture2D(f_texture, uv);"
-		//"	fColor = color - texture2D(f_texture, uv);"
+		/*"	vec4 lightColor = vec4(1.0f, 0.0f, 0.0f, 1.0f); "
+		"	fColor = vec4(0.50f, 0.50f, 0.50f, 1.0f);"
+		"	fColor = texture2D(f_texture, uv);"
+		"	fColor = color * texture2D(f_texture, uv);"
+		"	fColor = lightColor * texture2D(f_texture, uv);"
+		"	fColor = color + texture2D(f_texture, uv);"
+		"	fColor = color - texture2D(f_texture, uv);"*/
 		"	fColor = color;"
 		"}"; //Fragment Shader Src
 
@@ -293,10 +304,41 @@ void Game::initialize()
 		vec3(0.0f, 1.0f, 0.0f)	// 0.0f, 1.0f, 0.0f Look Down and 0.0f, -1.0f, 0.0f Look Up
 		);
 
-	// Model matrix
+	//Enemy model matrix
+	for (int i = 0; i > 10; i++)
+	{
+		modelX[i] = mat4(
+			1.0f
+		);
+	}
+
+	modelXPos[0] = 0;
+	modelXPos[1] = -100;
+	modelXPos[2] = -200;
+	modelXPos[3] = -150;
+	modelXPos[4] = -50;
+	modelXPos[5] = -25;
+	modelXPos[6] = -175;
+	modelXPos[7] = -125;
+	modelXPos[7] = -125;
+
+	modelX[0] = translate(modelX[0], vec3(3, 0, modelXPos[0]));
+	modelX[1] = translate(modelX[1], vec3(3, 0, modelXPos[1]));
+	modelX[2] = translate(modelX[2], vec3(3, 0, modelXPos[2]));
+	modelX[3] = translate(modelX[3], vec3(3, 0, modelXPos[3]));
+	modelX[4] = translate(modelX[4], vec3(3, 0, modelXPos[4]));
+	modelX[5] = translate(modelX[5], vec3(3, 0, modelXPos[5]));
+	modelX[6] = translate(modelX[6], vec3(3, 0, modelXPos[6]));
+	modelX[7] = translate(modelX[7], vec3(3, 0, modelXPos[7]));
+	modelX[8] = translate(modelX[8], vec3(3, 0, modelXPos[8]));
+
+
+	// Palyer Model matrix
 	model = mat4(
 		1.0f					// Identity Matrix
 		);
+
+
 
 	// Enable Depth Test
 	glEnable(GL_DEPTH_TEST);
@@ -315,6 +357,7 @@ void Game::update()
 
 void Game::render()
 {
+	mvp = projection * view * model;
 
 #if (DEBUG >= 2)
 	DEBUG_MSG("Render Loop...");
