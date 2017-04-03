@@ -42,6 +42,7 @@ private:
 	double x1; double x5;
 	double x2; double x6;
 	double x3;
+	bool alive = true;
 };
 
 #endif

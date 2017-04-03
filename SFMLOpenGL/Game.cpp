@@ -1,6 +1,7 @@
 #include <Game.h>
 #include <Cube.h>
 #include <vector>
+#include <cubePlayer.h>
 using std::vector;
 
 GLuint	vsid,		// Vertex Shader ID
@@ -22,8 +23,8 @@ GLuint	vsid,		// Vertex Shader ID
 //const string filename = "grid_wip.tga";
 //const string filename = "minecraft.tga";
 //const string filename = "texture.tga";
-//const string filename = "texture_2.tga";
-const string filename = "uvtemplate.tga";
+const string filename = "texture_2.tga";
+//const string filename = "uvtemplate.tga";
 
 
 int width;			// Width of texture
@@ -80,14 +81,14 @@ void Game::run()
 			{
 				// Set Model Rotation
 				//model = rotate(model, 0.01f, glm::vec3(0, 1, 0)); // Rotate
-				model = translate(model, glm::vec3(-0.15, 0, 0));
+				model = translate(model, glm::vec3(-0.2, 0, 0));
 			}
 
 			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
 			{
 				// Set Model Rotation
 				//model = translate(model, glm::vec3(-0.1, 0, 0));// Rotate
-				model = translate(model, glm::vec3(0.15, 0, 0));
+				model = translate(model, glm::vec3(0.2, 0, 0));
 			}
 
 			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
@@ -196,14 +197,14 @@ void Game::initialize()
 		"out vec4 fColor;"
 		""
 		"void main() {"
-		/*"	vec4 lightColor = vec4(1.0f, 0.0f, 0.0f, 1.0f); "
-		"	fColor = vec4(0.50f, 0.50f, 0.50f, 1.0f);"
-		"	fColor = texture2D(f_texture, uv);"
-		"	fColor = color * texture2D(f_texture, uv);"
-		"	fColor = lightColor * texture2D(f_texture, uv);"
-		"	fColor = color + texture2D(f_texture, uv);"
-		"	fColor = color - texture2D(f_texture, uv);"*/
-		"	fColor = color;"
+		//"	vec4 lightColor = vec4(1.0f, 0.0f, 0.0f, 1.0f); "
+		//"	fColor = vec4(0.50f, 0.50f, 0.50f, 1.0f);"
+		//"	fColor = texture2D(f_texture, uv);"
+		//"	fColor = color * texture2D(f_texture, uv);"
+		//"	fColor = lightColor * texture2D(f_texture, uv);"
+			"fColor = color + texture2D(f_texture, uv);"
+		//"	fColor = color - texture2D(f_texture, uv);"
+		//"	fColor = color;"
 		"}"; //Fragment Shader Src
 
 	DEBUG_MSG("Setting Up Fragment Shader");
@@ -311,27 +312,29 @@ void Game::initialize()
 	}
 
 	//Setting up initial positions for the cubes.
-	modelZPos[0] = -55;
-	modelZPos[1] = -60;
-	modelZPos[2] = -200;
-	modelZPos[3] = -150;
-	modelZPos[4] = -40;
-	modelZPos[5] = -85;
-	modelZPos[6] = -175;
-	modelZPos[7] = -125;
-	modelZPos[8] = -120;
-	modelZPos[9] = -225;
+	modelZPos[0] = -155;
+	modelZPos[1] = -160;
+	modelZPos[2] = -300;
+	modelZPos[3] = -250;
+	modelZPos[4] = -140;
+	modelZPos[5] = -185;
+	modelZPos[6] = -275;
+	modelZPos[7] = -225;
+	modelZPos[8] = -220;
+	modelZPos[9] = -325;
 
 	modelX[0] = translate(modelX[0], vec3(-10, 0, modelZPos[0]));
 	modelX[1] = translate(modelX[1], vec3(0, 0, modelZPos[1]));
 	modelX[2] = translate(modelX[2], vec3(2, 0, modelZPos[2]));
 	modelX[3] = translate(modelX[3], vec3(-3, 0, modelZPos[3]));
 	modelX[4] = translate(modelX[4], vec3(-6, 0, modelZPos[4]));
-	modelX[5] = translate(modelX[5], vec3(1, 0, modelZPos[5]));
+	modelX[5] = translate(modelX[5], vec3(5, 0, modelZPos[5]));
 	modelX[6] = translate(modelX[6], vec3(10, 0, modelZPos[6]));
 	modelX[7] = translate(modelX[7], vec3(5, 0, modelZPos[7]));
 	modelX[8] = translate(modelX[8], vec3(3, 0, modelZPos[8]));
 
+	//setting player colour
+	
 
 	// Palyer Model matrix
 	model = mat4(
@@ -351,28 +354,32 @@ void Game::update()
 #if (DEBUG >= 2)
 	DEBUG_MSG("Updating...");
 #endif
-
+	
 	//collision and cube respawn
-
-	for (int i = 0; i < arraymax; i++)
+	if (alive == true)
 	{
-		if (modelX[i][3].z < 0)
+
+		for (int i = 0; i < arraymax; i++)
 		{
-			modelX[i] = translate(modelX[i], glm::vec3(0, 0, 0.03f));
-		}
-		else
-		{
-			modelX[i] = translate(modelX[i], glm::vec3(0, 0, -225.0f));
-			std::cout << modelX[i][3].z << std::endl;
-		} 	
-		
-		if ( modelX[i][3].x <= model[3].x + 2 && modelX[i][3].x >= model[3].x - 2 &&  modelX[i][3].z >= -2)
-		{
-			
-			model = translate(model, glm::vec3(0, -.2, 0));
+			if (modelX[i][3].z < 0)
+			{
+				modelX[i] = translate(modelX[i], glm::vec3(0, 0, 0.03f));
+			}
+			else
+			{
+				modelX[i] = translate(modelX[i], glm::vec3(0, 0, -200.0f));
+				std::cout << modelX[i][3].z << std::endl;
+			}
+
+			if (modelX[i][3].x <= model[3].x + 2 && modelX[i][3].x >= model[3].x - 2 && modelX[i][3].z >= -2)
+			{
+
+				model = translate(model, glm::vec3(0, -22.2, 0));
+				alive = false;
+
+			}
 		}
 	}
-	
 	
 
 	// Update Model View Projection
@@ -384,9 +391,9 @@ void Game::renderPlayer(mat4 &refModel)
 	mvp = projection * view * refModel;
 
 	//VBO Data....vertices, colors and UV's appended
-	glBufferSubData(GL_ARRAY_BUFFER, 0 * VERTICES * sizeof(GLfloat), 3 * VERTICES * sizeof(GLfloat), vertices);
-	glBufferSubData(GL_ARRAY_BUFFER, 3 * VERTICES * sizeof(GLfloat), 4 * COLORS * sizeof(GLfloat), colors);
-	glBufferSubData(GL_ARRAY_BUFFER, ((3 * VERTICES) + (4 * COLORS)) * sizeof(GLfloat), 2 * UVS * sizeof(GLfloat), uvs);
+	glBufferSubData(GL_ARRAY_BUFFER, 0 * VERTICES * sizeof(GLfloat), 3 * VERTICES * sizeof(GLfloat), verticesP);
+	glBufferSubData(GL_ARRAY_BUFFER, 3 * VERTICES * sizeof(GLfloat), 4 * COLORS * sizeof(GLfloat), colorsP);
+	glBufferSubData(GL_ARRAY_BUFFER, ((3 * VERTICES) + (4 * COLORS)) * sizeof(GLfloat), 2 * UVS * sizeof(GLfloat), uvsP);
 
 	// Send transformation to shader mvp uniform
 	glUniformMatrix4fv(mvpID, 1, GL_FALSE, &mvp[0][0]);
