@@ -79,13 +79,15 @@ void Game::run()
 			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
 			{
 				// Set Model Rotation
-				model = rotate(model, 0.01f, glm::vec3(0, 1, 0)); // Rotate
+				//model = rotate(model, 0.01f, glm::vec3(0, 1, 0)); // Rotate
+				model = translate(model, glm::vec3(-0.15, 0, 0));
 			}
 
 			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
 			{
 				// Set Model Rotation
-				model = rotate(model, -0.01f, glm::vec3(0, 1, 0)); // Rotate
+				//model = translate(model, glm::vec3(-0.1, 0, 0));// Rotate
+				model = translate(model, glm::vec3(0.15, 0, 0));
 			}
 
 			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
@@ -308,12 +310,13 @@ void Game::initialize()
 		);
 	}
 
-	modelZPos[0] = -35;
+	//Setting up initial positions for the cubes.
+	modelZPos[0] = -55;
 	modelZPos[1] = -60;
 	modelZPos[2] = -200;
 	modelZPos[3] = -150;
 	modelZPos[4] = -40;
-	modelZPos[5] = -25;
+	modelZPos[5] = -85;
 	modelZPos[6] = -175;
 	modelZPos[7] = -125;
 	modelZPos[8] = -120;
@@ -349,18 +352,28 @@ void Game::update()
 	DEBUG_MSG("Updating...");
 #endif
 
+	//collision and cube respawn
+
 	for (int i = 0; i < arraymax; i++)
 	{
-		if (modelZPos[i] < 0)
+		if (modelX[i][3].z < 0)
 		{
-			modelX[i] = translate(modelX[i], glm::vec3(0, 0, 0.02));
+			modelX[i] = translate(modelX[i], glm::vec3(0, 0, 0.03f));
 		}
 		else
 		{
-			modelZPos[i] = -100;
+			modelX[i] = translate(modelX[i], glm::vec3(0, 0, -225.0f));
+			std::cout << modelX[i][3].z << std::endl;
+		} 	
+		
+		if ( modelX[i][3].x <= model[3].x + 2 && modelX[i][3].x >= model[3].x - 2 &&  modelX[i][3].z >= -2)
+		{
+			
+			model = translate(model, glm::vec3(0, -.2, 0));
 		}
 	}
-
+	
+	
 
 	// Update Model View Projection
 	//mvp = projection * view * model;
