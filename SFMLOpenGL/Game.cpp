@@ -77,31 +77,59 @@ void Game::run()
 				isRunning = false;
 			}
 
-			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && model[3].x > -6)
 			{
 				// Set Model Rotation
 				//model = rotate(model, 0.01f, glm::vec3(0, 1, 0)); // Rotate
 				model = translate(model, glm::vec3(-0.2, 0, 0));
 			}
 
-			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && model[3].x < 6)
 			{
 				// Set Model Rotation
 				//model = translate(model, glm::vec3(-0.1, 0, 0));// Rotate
 				model = translate(model, glm::vec3(0.2, 0, 0));
 			}
-
-			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+			
+			// replay function
+			if (alive == false && sf::Keyboard::isKeyPressed(sf::Keyboard::R))
 			{
-				// Set Model Rotation
-				model = rotate(model, -0.01f, glm::vec3(1, 0, 0)); // Rotate
-			}
+				// resets all z positions
+				modelZPos[0] = -225;
+				modelZPos[1] = -160;
+				modelZPos[2] = -300;
+				modelZPos[3] = -250;
+				modelZPos[4] = -140;
+				modelZPos[5] = -185;
+				modelZPos[6] = -275;
+				modelZPos[7] = -155;
+				modelZPos[8] = -220;
+				modelZPos[9] = -325;
 
-			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-			{
-				// Set Model Rotation
-				model = rotate(model, 0.01f, glm::vec3(1, 0, 0)); // Rotate
+				modelX[0] = translate(modelX[0], vec3(0,  0, modelZPos[0]));
+				modelX[1] = translate(modelX[1], vec3(0, 0, modelZPos[1]));
+				modelX[2] = translate(modelX[2], vec3(0, 0, modelZPos[2]));
+				modelX[3] = translate(modelX[3], vec3(0,  0, modelZPos[3]));
+				modelX[4] = translate(modelX[4], vec3(0,  0, modelZPos[4]));
+				modelX[5] = translate(modelX[5], vec3(0, 0, modelZPos[5]));
+				modelX[6] = translate(modelX[6], vec3(0, 0, modelZPos[6]));
+				modelX[7] = translate(modelX[7], vec3(0,  0, modelZPos[7]));
+				modelX[8] = translate(modelX[8], vec3(0, 0, modelZPos[8]));
+
+				// rests players x position
+				model = translate(model, glm::vec3(0, 22.2, 0));
+				alive = true;
 			}
+			
+
+			//else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+			//{
+			//	// Set Model Rotation
+			//	model = rotate(model, 0.01f, glm::vec3(1, 0, 0)); // Rotate
+			//}
+
+			
+			
 		}
 		update();
 		render();
@@ -329,8 +357,8 @@ void Game::initialize()
 	modelX[3] = translate(modelX[3], vec3(-3, 0, modelZPos[3]));
 	modelX[4] = translate(modelX[4], vec3(-6, 0, modelZPos[4]));
 	modelX[5] = translate(modelX[5], vec3(5, 0, modelZPos[5]));
-	modelX[6] = translate(modelX[6], vec3(10, 0, modelZPos[6]));
-	modelX[7] = translate(modelX[7], vec3(5, 0, modelZPos[7]));
+	modelX[6] = translate(modelX[6], vec3(1, 0, modelZPos[6]));
+	modelX[7] = translate(modelX[7], vec3(-5, 0, modelZPos[7]));
 	modelX[8] = translate(modelX[8], vec3(3, 0, modelZPos[8]));
 
 	//setting player colour
@@ -361,7 +389,7 @@ void Game::update()
 
 		for (int i = 0; i < arraymax; i++)
 		{
-			if (modelX[i][3].z < 0)
+			if (modelX[i][3].z < 0 )
 			{
 				modelX[i] = translate(modelX[i], glm::vec3(0, 0, 0.03f));
 			}
@@ -375,11 +403,33 @@ void Game::update()
 			{
 
 				model = translate(model, glm::vec3(0, -22.2, 0));
+				std::cout << "Press 'R' to replay" << std::endl;
 				alive = false;
 
 			}
 		}
+	
+		 //this is jumping impimentation
+		//if (jumping == true)
+		//{ 
+		//	for (int index = 0; index < 10000; index++)
+		//	{
+		//		model = translate(model, glm::vec3(0, 0.00001, 0));
+		//		if (index > 950)
+		//			break;
+		//	}
+		//	// 
+		//	for (int index1 = 0; index1 < 10000; index1++)
+		//	{
+		//		if (model[3].y >= 5)
+		//		{
+		//			model = translate(model, glm::vec3(0, -0.00001, 0));
+		//		}
+		//	}
+		//	jumping = false;
+		//}
 	}
+
 	
 
 	// Update Model View Projection

@@ -43,6 +43,7 @@ private:
 	double x2; double x6;
 	double x3;
 	bool alive = true;
+	bool jumping = false;
 };
 
 #endif
