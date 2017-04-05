@@ -119,8 +119,52 @@ void Game::run()
 				// rests players x position
 				model = translate(model, glm::vec3(0, 22.2, 0));
 				alive = true;
+
+				// reseting view
+
+				view = lookAt(
+					vec3(0.0f, 4.0f, 10.0f),	// Camera (x,y,z), in World Space
+					vec3(0.0f, 0.0f, 0.0f),	// Camera looking at origin
+					vec3(0.0f, 1.0f, 0.0f)	// 0.0f, 1.0f, 0.0f Look Down and 0.0f, -1.0f, 0.0f Look Up
+				);
 			}
 			
+			if (alive == false && sf::Keyboard::isKeyPressed(sf::Keyboard::T))
+			{
+				// resets all z positions
+				modelZPos[0] = -225;
+				modelZPos[1] = -160;
+				modelZPos[2] = -300;
+				modelZPos[3] = -250;
+				modelZPos[4] = -140;
+				modelZPos[5] = -185;
+				modelZPos[6] = -275;
+				modelZPos[7] = -155;
+				modelZPos[8] = -220;
+				modelZPos[9] = -325;
+
+				modelX[0] = translate(modelX[0], vec3(0, 0, modelZPos[0]));
+				modelX[1] = translate(modelX[1], vec3(0, 0, modelZPos[1]));
+				modelX[2] = translate(modelX[2], vec3(0, 0, modelZPos[2]));
+				modelX[3] = translate(modelX[3], vec3(0, 0, modelZPos[3]));
+				modelX[4] = translate(modelX[4], vec3(0, 0, modelZPos[4]));
+				modelX[5] = translate(modelX[5], vec3(0, 0, modelZPos[5]));
+				modelX[6] = translate(modelX[6], vec3(0, 0, modelZPos[6]));
+				modelX[7] = translate(modelX[7], vec3(0, 0, modelZPos[7]));
+				modelX[8] = translate(modelX[8], vec3(0, 0, modelZPos[8]));
+
+				// rests players x position
+				model = translate(model, glm::vec3(0, 22.2, 0));
+				alive = true;
+
+				// reseting view
+
+				view = lookAt(
+					vec3(0.0f, 1.0f, 10.0f),	// Camera (x,y,z), in World Space
+					vec3(0.0f, 0.0f, 0.0f),	// Camera looking at origin
+					vec3(0.0f, 1.0f, 0.0f)	// 0.0f, 1.0f, 0.0f Look Down and 0.0f, -1.0f, 0.0f Look Up
+				);
+			}
 
 			//else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
 			//{
@@ -404,9 +448,13 @@ void Game::update()
 
 				model = translate(model, glm::vec3(0, -22.2, 0));
 				std::cout << "Press 'R' to replay" << std::endl;
+				int index = 0;
+				float zPos = 10;
+			
 				alive = false;
 
 			}
+
 		}
 	
 		 //this is jumping impimentation
